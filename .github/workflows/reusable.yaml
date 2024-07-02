@@ -1,0 +1,29 @@
+name: Workflow
+
+on:
+  workflow_call:
+    inputs:
+      file_path:
+        required: true
+        type: string
+
+jobs:
+  modify-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Text Modifier Action
+        uses: hassanahtasham/text-alter-repo@main
+        with:
+          file_path: ${{ inputs.file_path }}
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "TextChanger-Updated"
+          file_pattern: ${{ inputs.file_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
